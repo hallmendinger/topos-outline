@@ -9,6 +9,6 @@ PH Luzern, Universitaet Hamburg, Universitetet i Oslo.
 
 **Die Seite:** https://hallmendinger.github.io/topos-outline/
 
-Entwurfsstand vom 14. September 2026. Die Seite traegt Notizfelder am
+Entwurfsstand September 2026. Die Seite traegt Notizfelder am
 Rand und ein Antwortfeld bei jeder offenen Frage; „copy everything I
 wrote“ sammelt alles zusammen.
