@@ -817,8 +817,20 @@ var blocks = [].slice.call(main.children).filter(function(el){
   return /^(P|TABLE|BLOCKQUOTE)$/.test(el.tagName) || el.classList.contains('gantt');
 }).filter(function(el){ return !el.classList.contains('bar') && !el.classList.contains('ctl'); });
 
+/* Schluessel aus dem Inhalt, nicht aus der Position: sonst rutschen alle
+   Notizen um einen Absatz weiter, sobald irgendwo einer dazukommt. */
+function key(el){
+  var t=(el.textContent||'').toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,90);
+  var h=5381;
+  for(var i=0;i<t.length;i++){ h=((h<<5)+h+t.charCodeAt(i))|0; }
+  return 'k'+(h>>>0).toString(36);
+}
+var seen={};
 blocks.forEach(function(el,i){
-  el.classList.add('ann'); el.dataset.ann='b'+i;
+  var k=key(el);
+  while(seen[k]) k=k+'_';          /* zwei gleiche Absaetze bekommen eigene Schluessel */
+  seen[k]=1;
+  el.classList.add('ann'); el.dataset.ann=k;
   var pen=document.createElement('button');
   pen.type='button'; pen.className='pen'; pen.textContent='\u270E';
   pen.title='Add a note on this passage';
