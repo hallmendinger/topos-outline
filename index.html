@@ -282,6 +282,7 @@ EUR 400,000 · Lucerne, Hamburg, Oslo</p>
   <button type="button" id="alldec">open all decisions</button>
   <button type="button" id="copynotes">copy everything I wrote</button>
   <button type="button" id="share">share my notes with the others</button>
+  <button type="button" id="clearnotes">clear my notes</button>
   <span id="notestatus">Everything stays in your browser. Nothing is sent anywhere.</span>
 </div>
 
@@ -537,11 +538,11 @@ reflections from Norway and Switzerland</b>, so the transnational work is not ne
 · INDRUM 2024 Barcelona, <i>Mathematical orientation as part of teaching competence</i>
 · BzMU 2025 · Allmendinger 2026, <i>Felix Klein und die mathematische Orientierung</i>
 (DMV) · the Festschrift chapter <i>Pfade legen, Brücken schlagen</i>. Two in English.
-<b>Underneath it lies the earlier Klein work from Lucerne</b>: the doctoral thesis
-(Siegen 2014) on <i>Elementarmathematik vom höheren Standpunkte aus</i>, the analysis of
-its didactics in the <i>Journal für Mathematik-Didaktik</i> (2016), and further pieces
-including at ICME — the historical and didactic groundwork the framework grew out of.
-<span style="color:var(--grey)">— the full list is Henrike's to complete.</span></td></tr>
+<b>Underneath it lies the Klein work the framework grew out of</b>: the doctoral
+thesis <i>Felix Kleins „Elementarmathematik vom höheren Standpunkte aus“ — eine Analyse
+aus historischer und mathematikdidaktischer Sicht</i> (Siegen 2014), and
+<i>Die Didaktik in Felix Kleins „Elementarmathematik vom höheren Standpunkte aus“</i>
+(Journal für Mathematik-Didaktik 37, 2016).</td></tr>
 
 <tr><td class="k"><span class="line">our line, together</span>Borel elicits probabilistic reasoning, and we know what it demands of the teacher</td>
 <td><b>Four works, all three of us on each.</b> <i>mathematik lehren</i> 229 (2021),
@@ -593,12 +594,15 @@ against the originals.</b></p>
 <thead><tr><th style="width:29%">Anchor</th><th>What it does for us</th></tr></thead>
 <tbody>
 <tr><td class="k">The double discontinuity, and the discussion since<br><span style="font-weight:400;color:var(--grey)">Klein 1908 as its origin</span></td>
-<td>Klein named the problem; the century of work since is what the needs analysis
-actually stands on, and interface tasks are only its most developed current answer.
-<b>Which further work we name here is Henrike's call</b> — this is the one place where
-the choice of references is a judgement about the field, not a formality.</td></tr>
+<td>Klein named it; the work since is what the needs analysis actually stands on.
+Winsløw and Grønbæk reread the two discontinuities for the calculus case
+(<i>Klein's double discontinuity revisited</i>, Recherches en Didactique des
+Mathématiques 34, 2014), and Eichler and Isaev showed that an intervention can shift
+what students believe about coherence and relevance (Journal für Mathematik-Didaktik
+44, 2023). <b>One sentence of this belongs in the needs analysis</b> — enough to show we
+stand in a discussion, not enough to turn the field into a literature review.</td></tr>
 
-<tr><td class="k">Interface tasks<br><span style="font-weight:400;color:var(--grey)">Bauer 2013 · Eichler &amp; Isaev 2022/23</span></td>
+<tr><td class="k">Interface tasks<br><span style="font-weight:400;color:var(--grey)">Bauer 2013 · Eichler &amp; Isaev 2023</span></td>
 <td><b>The established answer — and the one our work stands alongside.</b> Interface
 tasks make the links between university and school mathematics their explicit topic,
 with evidence on their effect on students' beliefs about the discontinuity.
@@ -898,6 +902,27 @@ document.getElementById('allnotes').addEventListener('click',function(){
   blocks.forEach(function(el){ openNote(el,false); }); relayout(); });
 document.getElementById('alldec').addEventListener('click',function(){
   document.querySelectorAll('aside.dec details').forEach(function(d){ d.open=true; }); relayout(); });
+document.getElementById('clearnotes').addEventListener('click',function(){
+  var st=document.getElementById('notestatus');
+  var n=+document.getElementById('ncount').textContent;
+  if(!n){ st.textContent='There is nothing to clear.'; return; }
+  if(!confirm('Remove all '+n+' of your notes from this page? This cannot be undone — '+
+              'copy them out first if you still need them.')) return;
+  blocks.forEach(function(el){
+    set(el.dataset.ann,'');
+    if(el._ta){ el._ta.value=''; }
+    var nc=el.querySelector('.nc')||(el.nextElementSibling&&el.nextElementSibling.classList&&
+           el.nextElementSibling.classList.contains('nc')?el.nextElementSibling:null);
+    if(nc) nc.remove();
+    el._ta=null; mark(el);
+  });
+  document.querySelectorAll('aside.dec details').forEach(function(d,i){
+    set('dec'+i,''); if(d._ta) d._ta.value='';
+  });
+  count(); relayout();
+  st.textContent='Cleared. The page is back to the state it was sent in.';
+});
+
 document.getElementById('copynotes').addEventListener('click',function(){
   var out=[];
   document.querySelectorAll('aside.dec details').forEach(function(d,i){
